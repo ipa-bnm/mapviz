@@ -63,7 +63,8 @@ namespace mapviz_plugins
 
   MarkerPlugin::MarkerPlugin() :
     config_widget_(new QWidget()),
-    connected_(false)
+    connected_(false),
+    line_scale_(1.0)
   {
     ui_.setupUi(config_widget_);
 
@@ -79,6 +80,7 @@ namespace mapviz_plugins
 
     QObject::connect(ui_.selecttopic, SIGNAL(clicked()), this, SLOT(SelectTopic()));
     QObject::connect(ui_.topic, SIGNAL(editingFinished()), this, SLOT(TopicEdited()));
+    QObject::connect(ui_.line_scale, SIGNAL(valueChanged(double)), this, SLOT(SetLineScale(double)));
 
     startTimer(1000);
   }
@@ -124,6 +126,11 @@ namespace mapviz_plugins
         ROS_INFO("Subscribing to %s", topic_.c_str());
       }
     }
+  }
+
+  void MarkerPlugin::SetLineScale(double scale)
+  {
+    line_scale_ = scale;
   }
 
   void MarkerPlugin::handleMessage(const topic_tools::ShapeShifter::ConstPtr& msg)
@@ -473,13 +480,13 @@ namespace mapviz_plugins
               if (marker.points.size() == 1)
               {
                 // If the marker only has one point, use scale_y as the arrow width.
-                glLineWidth(marker.scale_y);
+                glLineWidth(marker.scale_y*line_scale_);
               }
               else
               {
                 // If the marker has both start and end points explicitly specified, use
                 // scale_x as the shaft diameter.
-                glLineWidth(marker.scale_x);
+                glLineWidth(marker.scale_x*line_scale_);
               }
               glBegin(GL_LINES);
 
@@ -516,7 +523,7 @@ namespace mapviz_plugins
             }
             else if (marker.display_type == visualization_msgs::Marker::LINE_STRIP)
             {
-              glLineWidth(marker.scale_x);
+              glLineWidth(marker.scale_x*line_scale_);
               glBegin(GL_LINE_STRIP);
 
                 std::list<StampedPoint>::iterator point_it = marker.points.begin();
@@ -537,7 +544,7 @@ namespace mapviz_plugins
             }
             else if (marker.display_type == visualization_msgs::Marker::LINE_LIST)
             {
-              glLineWidth(marker.scale_x);
+              glLineWidth(marker.scale_x*line_scale_);
               glBegin(GL_LINES);
 
                 std::list<StampedPoint>::iterator point_it = marker.points.begin();
@@ -763,11 +770,17 @@ namespace mapviz_plugins
       
       TopicEdited();
     }
+    if (node["line_scale"])
+    {
+      node["line_scale"] >> line_scale_;
+      ui_.line_scale->setValue(line_scale_);
+    }
   }
 
   void MarkerPlugin::SaveConfig(YAML::Emitter& emitter, const std::string& path)
   {
     emitter << YAML::Key << "topic" << YAML::Value << boost::trim_copy(ui_.topic->text().toStdString());
+    emitter << YAML::Key << "line_scale" << YAML::Value << line_scale_;
   }
 
   void MarkerPlugin::timerEvent(QTimerEvent *event)

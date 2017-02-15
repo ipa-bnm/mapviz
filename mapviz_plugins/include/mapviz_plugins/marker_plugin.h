@@ -94,6 +94,7 @@ namespace mapviz_plugins
   protected Q_SLOTS:
     void SelectTopic();
     void TopicEdited();
+    void SetLineScale(double alpha);
 
   private:
     struct StampedPoint
@@ -136,6 +137,7 @@ namespace mapviz_plugins
     QWidget* config_widget_;
 
     std::string topic_;
+    double line_scale_;
 
     ros::Subscriber marker_sub_;
     bool connected_;

@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>27</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -74,7 +74,7 @@
    <property name="minimumSize">
     <size>
      <width>332</width>
-     <height>301</height>
+     <height>321</height>
     </size>
    </property>
    <property name="features">
@@ -493,9 +493,7 @@
   <tabstop>addbutton</tabstop>
   <tabstop>removebutton</tabstop>
  </tabstops>
- <resources>
-  <include location="resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>addbutton</sender>
@@ -595,7 +593,7 @@
   </connection>
   <connection>
    <sender>actionOpen_config</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>mapviz</receiver>
    <slot>OpenConfig()</slot>
    <hints>
@@ -611,7 +609,7 @@
   </connection>
   <connection>
    <sender>actionSave_config</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>mapviz</receiver>
    <slot>SaveConfig()</slot>
    <hints>
@@ -691,7 +689,7 @@
   </connection>
   <connection>
    <sender>actionSet_Capture_Directory</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>mapviz</receiver>
    <slot>SetCaptureDirectory()</slot>
    <hints>

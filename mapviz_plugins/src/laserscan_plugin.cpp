@@ -657,7 +657,7 @@ namespace mapviz_plugins
    */
   void LaserScanPlugin::AlphaEdited()
   {
-    alpha_ = std::max(0.0f, std::min(ui_.alpha->text().toFloat(), 1.0f));
+    alpha_ = std::max(0.0, std::min(ui_.alpha->value(), 1.0));
     ui_.alpha->setValue(alpha_);
   }
 
